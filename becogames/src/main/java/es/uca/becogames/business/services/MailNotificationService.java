@@ -30,6 +30,10 @@ public class MailNotificationService {
 	@Value("${MAIL_MAIN}")
 	public String mainMailAccount;
 
+	@Value("${MAIL_NOTIFICATIONS}")
+	public String mailNotifications;
+
+	
 	@Value("${MAIL_HEADER}")
 	public String mailEnvironment;
 
@@ -251,11 +255,17 @@ public class MailNotificationService {
 				lastMessages[i] = messages[i];
 			}
 
-			imprimeLote(lastMessages);
 			
 			try {
-				emailSender.send(lastMessages);
-				System.out.println(">>>Enviados");
+
+
+				if(mailNotifications!=null && mailNotifications.equals("yes")) {
+					imprimeLote(lastMessages);
+					emailSender.send(lastMessages);
+					System.out.println(">>>Enviados");					
+				} 
+				
+				
 				
 			}catch(Exception e) {
 				System.out.println(">>>NO ENVIADOS");

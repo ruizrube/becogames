@@ -52,7 +52,7 @@ public class BeCoGamesApplication {
 			
 			createQuestionnaire(questionnaireService);
 			
-			System.out.println("INITIAL DATA LOADED!");
+			System.out.println("BECOGAME IS RUNNING!!!");
 
 		};
 
@@ -112,7 +112,7 @@ public class BeCoGamesApplication {
 			User admin = new User("Admin", "BECOGames", "admin");
 			admin.setPassword("CHANGE_THIS_PASSWORD");
 			admin.setRole(Role.Admin);
-			admin.setMail("CHANGE_THIS_MAIL");
+			admin.setMail("CHANGE_THIS@mail.com");
 			admin.setOrganization(orgUCA);
 			admin.setBirthDate(LocalDate.of(2000, 11, 11));
 			admin.setGender(Gender.MAN);	

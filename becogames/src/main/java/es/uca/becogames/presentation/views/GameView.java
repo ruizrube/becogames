@@ -60,7 +60,6 @@ public abstract class GameView extends AbstractView implements HasUrlParameter<S
 	VerticalLayout headerPanel = new VerticalLayout();
 	VerticalLayout contentPanel = new VerticalLayout();
 
-	//VerticalLayout buttonsPanel = new VerticalLayout();
 	VerticalLayout panelInvitations;
 
 	Button startGameButton;
@@ -221,16 +220,17 @@ public abstract class GameView extends AbstractView implements HasUrlParameter<S
 		        new ResponsiveStep("32em", 2),
 		        new ResponsiveStep("40em", 3),
 		 		new ResponsiveStep("47em", 4));
-		//layout.setSizeUndefined();
-		//layout.setWidthFull();
 		
 		
-		//buttonsPanel.removeAll();
-		//buttonsPanel.add(layout);
-		//buttonsPanel.setSizeUndefined();
-		//buttonsPanel.setAlignItems(Alignment.CENTER);
-		//contentPanel.add(buttonsPanel);
-		contentPanel.add(layout);
+		
+		VerticalLayout buttonsPanel = new VerticalLayout();
+		buttonsPanel.add(layout);
+		buttonsPanel.setAlignItems(Alignment.CENTER);
+		buttonsPanel.setSizeUndefined();
+		//buttonsPanel.setWidthFull();
+		buttonsPanel.add(layout);
+			
+		contentPanel.add(buttonsPanel);
 	}
 
 	private void manageButtonListeners() {
@@ -267,7 +267,7 @@ public abstract class GameView extends AbstractView implements HasUrlParameter<S
 
 		resolveGameButton.addClickListener(e -> {
 
-			String errorDescription = this.checkConditionsToResolveGame();
+			String errorDescription = getGameService().checkConditionsToResolveGame(runningGame);
 
 			if (!errorDescription.isEmpty()) {
 
@@ -439,9 +439,10 @@ public abstract class GameView extends AbstractView implements HasUrlParameter<S
 
 		} else if (runningGame.getStatus().equals(GameStatus.Running)) {
 
-			if (runningGame.getOwner().equals(this.currentUser)) { // SOY PROPIETARIO
-				showPanelSendInvitations();
-			}
+			// No mostramos el panel de invitaciones si la partida ya ha empezado
+//			if (runningGame.getOwner().equals(this.currentUser)) { // SOY PROPIETARIO
+//				showPanelSendInvitations();
+//			}
 
 			if (runningPlayer != null) { // SOY JUGADOR
 
@@ -876,11 +877,9 @@ public abstract class GameView extends AbstractView implements HasUrlParameter<S
 	
 	protected abstract void addParametersToGame();
 
-	protected abstract String checkConditionsToStartGame();
-
+	
 	protected abstract String checkWarningsBeforeStartingGame();
 
-	protected abstract String checkConditionsToResolveGame();
 
 	protected abstract String checkWarningsBeforeResolvingGame();
 
@@ -893,5 +892,8 @@ public abstract class GameView extends AbstractView implements HasUrlParameter<S
 	protected abstract void showPanelResults();
 
 	protected abstract GameService getGameService();
+
+	protected abstract String checkConditionsToStartGame();
+	
 
 }

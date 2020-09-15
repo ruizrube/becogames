@@ -33,7 +33,7 @@ public class Game implements Serializable {
 	 */
 	private static final long serialVersionUID = 2518206850461780454L;
 
-	public static final String SHOW_GAME_RESULTS = "Show game results";
+	public static final String PARAM_SHOW_GAME_RESULTS = "Show game results";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -176,7 +176,7 @@ public class Game implements Serializable {
 	}
 
 	public boolean getParamShowGameResults() {
-		return this.getParameter(Game.SHOW_GAME_RESULTS) > 0.9;
+		return this.getParameter(Game.PARAM_SHOW_GAME_RESULTS) > 0.9;
 	}
 
 	public List<GameAction> getActions() {
@@ -355,4 +355,5 @@ public class Game implements Serializable {
 		return true;
 	}
 
+	
 }

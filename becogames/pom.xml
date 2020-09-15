@@ -6,7 +6,7 @@
 	<groupId>es.uca.iw</groupId>
 	<artifactId>becogames</artifactId>
 	<name>Behaviour Economic Games</name>
-	<version>1.2.8</version>
+	<version>1.2.9</version>
 	<packaging>jar</packaging>
 
 	<properties>

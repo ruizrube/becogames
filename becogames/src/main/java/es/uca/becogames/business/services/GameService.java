@@ -88,6 +88,9 @@ public abstract class GameService {
 	@Transactional
 	public Game startGame(Game game, User user) {
 
+		if(game.countJoinedPlayers()<2) {
+			throw new IllegalArgumentException("INADEQUATE NUMBER OF USERS");
+		}
 		String explanation = "You have started " + game.toString();
 
 		game.setStatus(GameStatus.Running);
@@ -174,8 +177,20 @@ public abstract class GameService {
 		return game;
 	}
 
+	
+	
+	
+	
 	@Transactional
 	public Game resolveGame(Game game) {
+		
+		String conditions=checkConditionsToResolveGame(game);
+		
+		if (conditions!=null && !conditions.equals("")) {
+			throw new IllegalArgumentException(conditions);
+		}
+		
+		
 		String broadcastExplanation = game.toString() + " has been resolved!";
 
 		game.setStatus(GameStatus.Resolved);
@@ -375,5 +390,11 @@ public abstract class GameService {
 	protected abstract void markRemovedPlayers(Game game);
 
 	public abstract void computeBenefits(Game game);
+	
+
+	public abstract String checkConditionsToResolveGame(Game game);
+
+	
+	
 
 }

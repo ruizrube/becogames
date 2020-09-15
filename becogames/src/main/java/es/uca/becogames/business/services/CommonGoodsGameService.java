@@ -12,8 +12,6 @@ import es.uca.becogames.business.entities.User;
 @Component
 public class CommonGoodsGameService extends GameService {
 
-	
-	
 	public Game createNewGame(User user) {
 		return super.createNewGame(new CommonGoodsGame(), user);
 	}
@@ -79,7 +77,6 @@ public class CommonGoodsGameService extends GameService {
 	public void computeBenefits(Game theGame) {
 
 		CommonGoodsGame game = (CommonGoodsGame) theGame;
-		
 
 		for (Player player : game.getJoinedPlayers()) {
 
@@ -87,8 +84,9 @@ public class CommonGoodsGameService extends GameService {
 			game.getPlayerInvestment(player.getUser()).ifPresent(personalInvestment -> {
 
 				Double totalInvestments = game.checkTotalInvestments();
-				
-				Double performance = game.getParamInitialAllowance() - personalInvestment + game.getParamWeight() * totalInvestments/game.countInvestments();
+
+				Double performance = game.getParamInitialAllowance() - personalInvestment
+						+ game.getParamWeight() * totalInvestments / game.countInvestments();
 
 				String explanation = "You have gained " + String.format("%.2f", performance) + "p on "
 						+ game.toString();
@@ -104,5 +102,24 @@ public class CommonGoodsGameService extends GameService {
 
 	}
 
+	@Override
+	public String checkConditionsToResolveGame(Game game) {
+
+		CommonGoodsGame myGame = (CommonGoodsGame) game;
+		
+		
+		if (myGame.countInvestments() == 0) {
+			return "It is not possible to resolve the game because there are no investments.";
+		} else if (myGame.countInvestments() == 1) {
+			return "It is not possible to resolve the game because there is only one investment.";
+		} else {
+			return "";
+
+		}
+
+	}
 	
+	
+	
+
 }

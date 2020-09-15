@@ -151,25 +151,11 @@ public class CommonGoodsGameView extends GameView {
 		runningGame.addParameter(CommonGoodsGame.PARAM_INITIAL_ALLOWANCE, initialAllowanceValue);
 		runningGame.addParameter(CommonGoodsGame.PARAM_WEIGHT, weightValue);
 		runningGame.addParameter(CommonGoodsGame.PARAM_RESOLVE_AUTOMATICALLY, resolveAutomatically ? 1.0 : 0.0);
-		runningGame.addParameter(Game.SHOW_GAME_RESULTS, showGameResultsForAll ? 1.0 : 0.0);
+		runningGame.addParameter(Game.PARAM_SHOW_GAME_RESULTS, showGameResultsForAll ? 1.0 : 0.0);
 
 	}
 
-	@Override
-	protected String checkConditionsToResolveGame() {
-
-		CommonGoodsGame myGame = (CommonGoodsGame) runningGame;
-
-		if (myGame.countInvestments() == 0) {
-			return "It is not possible to resolve the game because there are no investments.";
-		} else if (myGame.countInvestments() == 1) {
-			return "It is not possible to resolve the game because there is only one investment.";
-		} else {
-			return "";
-
-		}
-
-	}
+	
 
 	protected void showPanelParameters() {
 		CommonGoodsGame myGame = (CommonGoodsGame) runningGame;
@@ -335,7 +321,7 @@ public class CommonGoodsGameView extends GameView {
 	        
 	        //configuration.addSeries(new ListSeries("Initial Allowance", initialAllowance, initialAllowance, initialAllowance, initialAllowance));
 	        configuration.addSeries(new ListSeries("My Investment", myInvestment, game.getParamInitialAllowance(), 0, game.getParamInitialAllowance()));
-	        configuration.addSeries(new ListSeries("Average Partners's Investment", game.checkAverageInvestmentOfTheRemainingUsers(this.currentUser).getAsDouble(), 0, 25, 25));
+	        configuration.addSeries(new ListSeries("Average Partners's Investment", game.checkAverageInvestmentOfTheRemainingUsers(this.currentUser).getAsDouble(), 0, game.getParamInitialAllowance(), game.getParamInitialAllowance()));
 	        configuration.addSeries(new ListSeries("My Performance", game.checkBenefit(this.currentUser), game.checkMinimumObtainable(), game.checkMaximumObtainable(), game.checkSocialOptimal()));
 	        configuration.addSeries(new ListSeries("Average Partners's Performance", game.checkAverageInvestmentOfTheRemainingUsers(this.currentUser).getAsDouble(), game.checkHypotheticalAverageBenefitOfTheRemainingUsersInASoleScenario(this.currentUser), game.checkHypotheticalAverageBenefitOfTheRemainingUsersInAFreeRiderScenario(this.currentUser), game.checkSocialOptimal() ));
 

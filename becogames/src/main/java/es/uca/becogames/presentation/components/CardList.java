@@ -103,15 +103,7 @@ public class CardList extends Composite<Div> {
 
 
 	public void addMyListener(MyEventHandler eventHandler) {
-		System.out.println("se registra el liste");
-		this.myEventHandler=eventHandler;
-		
-		if(myEventHandler!=null) {
-			System.out.println("asignamos");
-		} else {
-			System.out.println("chungo");
-			
-		}
+		this.myEventHandler=eventHandler;		
 	}
 
 }
