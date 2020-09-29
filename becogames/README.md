@@ -21,6 +21,11 @@ This is the source code of the BECO Games platform, a progressive web applicatio
 --MAIL_PASSWORD=???
 --MAIL_MAIN=???
 --MAIL_HEADER=???
+--MAIL_NOTIFICATIONS=yes
+--LRS_ENDPOINT=http://???
+--LRS_AUTH=????
+
+
 
 5. Open http://localhost:5000/ in a web browser
 
