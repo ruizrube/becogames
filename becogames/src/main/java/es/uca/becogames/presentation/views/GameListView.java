@@ -12,16 +12,19 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 
 import es.uca.becogames.business.entities.CommonGoodsGame;
 import es.uca.becogames.business.entities.Game;
+import es.uca.becogames.business.entities.GameAction;
 import es.uca.becogames.business.entities.GameStatus;
 import es.uca.becogames.business.entities.Role;
 import es.uca.becogames.business.entities.User;
 import es.uca.becogames.business.services.GameService;
+import es.uca.becogames.business.services.XAPIService;
 import es.uca.becogames.business.services.UserService;
 import es.uca.becogames.business.services.WebNotificationService;
 import es.uca.becogames.presentation.MainLayout;
@@ -43,12 +46,13 @@ public class GameListView extends AbstractView {
 	private Grid<Game> grid = new Grid<>(Game.class);
 
 	private GameService gameService;
+	private XAPIService lrsService;
 
 	@Autowired
-	public GameListView(UserService userService, WebNotificationService broadcastingService, GameService service) {
+	public GameListView(UserService userService, WebNotificationService broadcastingService, GameService service, XAPIService lrsService) {
 		super(userService, broadcastingService);
 		this.gameService = service;
-
+this.lrsService=lrsService;
 		if (SecurityUtils.hasRole(Role.Admin.name())) {
 			ComboBox<User> userCombo = new ComboBox<User>("Player");
 			userCombo.setItemLabelGenerator(u -> u.getUsername());
@@ -110,16 +114,45 @@ public class GameListView extends AbstractView {
 		div.add(new Button("Log", clickEvent -> {
 			openGameLog(item);
 		}));
+		
+		
+		
+		if (item.getStatus().equals(GameStatus.Resolved)) {
+			if (SecurityUtils.hasRole(Role.Admin.name()) || item.getOwner().equals(currentUser)) {
+				div.add(new Button("xAPI", clickEvent -> {
+					
+					ConfirmDialog dialog = new ConfirmDialog("Sending xAPI data...", "Do you want to send game data to the learning record store?", 
+							"OK", ev -> {
+							sendDataToLRS(item);
+							}, "Cancel", e -> { });
+					
+					
+					dialog.open();
+					
+					
+				}));
+			}
+		}
+
+		
+		
+		
+		
+		
 
 		return div;
 	}
 
+
+
 	public void updateList(User user) {
 
 		if (user != null) {
-			grid.setItems(gameService.findByUser(user).stream().sorted((g1,g2)->g2.getLastActionDate().compareTo(g1.getLastActionDate())));
+			grid.setItems(gameService.findByUser(user).stream()
+					.sorted((g1, g2) -> g2.getLastActionDate().compareTo(g1.getLastActionDate())));
 		} else {
-			grid.setItems(gameService.findAll().stream().sorted((g1,g2)->g2.getLastActionDate().compareTo(g1.getLastActionDate())));
+			grid.setItems(gameService.findAll().stream()
+					.sorted((g1, g2) -> g2.getLastActionDate().compareTo(g1.getLastActionDate())));
 
 		}
 	}
@@ -137,12 +170,23 @@ public class GameListView extends AbstractView {
 		dialog.open();
 	}
 
+	private void sendDataToLRS(Game game) {
+		
+		if(lrsService.sendStatements(game)) {
+			Notification.show("xAPI staments were sent to the learning record store");
+		} else {
+			Notification.show("Unable to send xAPI statements");			
+		}
+		
+		
+	}
+	
+	
 	private void openGameResults(Game game) {
 
 		CommonGoodsGame myGame = (CommonGoodsGame) game;
 
 		CommonGoodsGameResultsDialog dialog = new CommonGoodsGameResultsDialog(myGame.getResults());
-
 
 		dialog.open();
 
@@ -163,8 +207,6 @@ public class GameListView extends AbstractView {
 		}
 
 	}
-
-	
 
 	@Override
 	protected void enter() {

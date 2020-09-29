@@ -89,7 +89,7 @@ public abstract class GameService {
 	public Game startGame(Game game, User user) {
 
 		if(game.countJoinedPlayers()<2) {
-			throw new IllegalArgumentException("INADEQUATE NUMBER OF USERS");
+			throw new IllegalArgumentException("NOT ENOUGH USERS");
 		}
 		String explanation = "You have started " + game.toString();
 
